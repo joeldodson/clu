@@ -3,13 +3,24 @@
 import os
 import typer 
 import json 
+from typing import List 
+
+app = typer.Typer()
+
 #######
-def filterShortcuts(kbs: object, searchStr: str) -> object: 
-    pass 
+def filterShortcuts(kbs: List, searchStr: str) -> List: 
+    searchStr = searchStr.lower()
+    typer.echo(f'searching commands for the string <{searchStr}>')
+    kbsFound = []
+    for sc in kbs:
+        if sc["command"].lower().find(searchStr) >= 0:
+            kbsFound.append(sc) 
+    typer.echo(f'Found {len(kbsFound)} shortcuts')
+    return kbsFound 
 
 
 #######
-def printShortcuts(kbs: object, pageSize: int, when: bool = False):
+def printShortcuts(kbs: List, pageSize: int, when: bool = False):
     count = 0
     for sc in kbs:
         sout = f'{sc["command"]} : {sc["key"]}'
@@ -21,7 +32,10 @@ def printShortcuts(kbs: object, pageSize: int, when: bool = False):
 
 
 #######
-def getShortcutsFromFile(kbsFile: str) -> object:
+# NOTE: I'm assuming this file is not ginormous
+# otherwise, it needs to be read in one line at a time.
+##
+def getShortcutsFromFile(kbsFile: str) -> List:
     jstr = ''
     with open(kbsFile, 'r') as f:
         for line in f.readlines():
@@ -32,23 +46,26 @@ def getShortcutsFromFile(kbsFile: str) -> object:
 
 
 #######
+@app.callback(invoke_without_command=True)
 def main(
-        kbsFile: str = typer.Option('defaultkeybindings.json', "--kbsFile", "-f"),
+        kbsFile: str = typer.Option('data\\defaultkeybindings.json', "--kbsFile", "-f"),
         searchStr: str = typer.Option(None, "--searchStr", "-s"),
         countOnly: bool = typer.Option(False, "--count", "-c"),
         when: bool = typer.Option(False, "--when", "-w"),
-        pageSize: int = typer.Option(10, "--pageSize", "-p")):
+        pageSize: int = typer.Option(5, "--pageSize", "-p")
+) -> None:
     shortcuts = getShortcutsFromFile(kbsFile)
     if countOnly: 
         typer.echo(f'File {kbsFile} contains {len(shortcuts)} shortcuts')
         raise typer.Exit()
-    elif searchStr: typer.echo(f'searching for string: <{searchStr}>')
+    elif searchStr: 
+        shortcuts = filterShortcuts(shortcuts, searchStr)
 
     printShortcuts(shortcuts, pageSize, when)
 
 
-
 if __name__ == "__main__":
-    typer.run(main)
+    app()
+    ## typer.run(main)
 
-
+## end of file 
