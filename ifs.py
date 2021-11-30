@@ -39,7 +39,8 @@ def printDirectoryInfo(dir: Dict, level: int = 0):
         dirpath, dirname = os.path.split(d)
         typer.echo(f'{indent(level)}{dirname}') 
     ## iterate through sub dirs twice.
-    ## I prefer to hear the names of the subdirs followed by the contents 
+    ## I prefer to hear the names of all the subdirs 
+    ## then hear the contents of each subdir
     for d in dir["dirs"].keys():
         if dir["dirs"][d]:
             printDirectoryInfo(dir["dirs"][d], level + 1)
