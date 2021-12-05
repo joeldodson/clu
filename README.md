@@ -41,6 +41,4 @@ I'm going to back burner this for a bit.
 
 One future Item I would like to do is use jijna2 to create HTML pages to display the shortcuts in tables making it easier to vew them with a screen reader.
 
-
-
-testing
+###### end of README 
