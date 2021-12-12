@@ -29,12 +29,13 @@ def indent(level: int) -> str:
 
 #######
 def printDirectoryInfo(dir: Dict, level: int = 0):
-    typer.echo(f'{indent(level)}DIRECTORY: {dir["name"]}') 
-    typer.echo(f'{indent(level)}FILES ({len(dir["files"])}):') 
+    if level > 0: # tired of hearing the directory I'm currently in 
+        typer.echo(f'{indent(level)}DIRECTORY: {dir["name"]}') 
+    typer.echo(f'{indent(level)}FILES -- {len(dir["files"])}:') 
     for f in dir["files"]:
         typer.echo(f'{indent(level)}{f}') 
 
-    typer.echo(f'{indent(level)}SUB DIRECTORIES ({len(dir["dirs"].keys())}):')
+    typer.echo(f'{indent(level)}SUB DIRECTORIES -- {len(dir["dirs"].keys())}:')
     for d in dir["dirs"].keys():
         dirpath, dirname = os.path.split(d)
         typer.echo(f'{indent(level)}{dirname}') 
@@ -47,7 +48,7 @@ def printDirectoryInfo(dir: Dict, level: int = 0):
 
 
     if len(dir["symlinks"]) > 0:
-        typer.echo(f'{indent(level)}SYMBOLIC LINKS ({len(dir["symlinks"])}):') 
+        typer.echo(f'{indent(level)}SYMBOLIC LINKS -- {len(dir["symlinks"])}:') 
         for s in dir["symlinks"]:
             typer.echo(f'{indent(level)}{s}') 
 
