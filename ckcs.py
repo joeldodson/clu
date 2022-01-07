@@ -127,7 +127,7 @@ def getShortcutsFromFile(kbsFile: str) -> List:
 ##
 @app.callback(invoke_without_command=True)
 def main(ctx: typer.Context,
-        kbsFile: str = typer.Option('data\\defaultkeybindings.json', "--kbsFile", "-f"),
+        kbsFile: str = typer.Option('./data/defaultkeybindings.json', "--kbsFile", "-f"),
         searchStr: str = typer.Option(None, "--searchStr", "-s"),
         countOnly: bool = typer.Option(False, "--count", "-c"),
         when: bool = typer.Option(False, "--when", "-w"),
