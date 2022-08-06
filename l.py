@@ -28,20 +28,25 @@ def indent(level: int) -> str:
 
 
 #######
-def printDirectoryInfo(dir: Dict, level: int = 0, dirsOnly = False):
-    if level > 0: # tired of hearing the directory I'm currently in 
-        typer.echo(f'{indent(level)}DIRECTORY: {dir["name"]}') 
-
-    # print directories first 
+def printDirs(dir: Dict, level: int = 0):
     typer.echo(f'{indent(level)}DIRECTORIES - {len(dir["dirs"].keys())}:')
     for d in dir["dirs"].keys():
         dirpath, dirname = os.path.split(d)
         typer.echo(f'{indent(level)}{dirname}') 
-    if dirsOnly: return 
 
+#######
+def printFiles(dir: Dict, level: int = 0):
     typer.echo(f'{indent(level)}FILES - {len(dir["files"])}:') 
     for f in dir["files"]:
         typer.echo(f'{indent(level)}{f}') 
+
+#######
+def printDirectoryInfo(dir: Dict, level: int = 0, dirsOnly = False):
+    if level > 0: # tired of hearing the directory I'm currently in, only print it if into sup dirs  
+        typer.echo(f'{indent(level)}DIRECTORY: {dir["name"]}') 
+
+    printDirs(dir, level)
+    printFiles(dir, level)
 
     ## go through dirs again to print the contents of each, if any exists 
     for d in dir["dirs"].keys():

@@ -4,9 +4,9 @@
 use functions from l.py to print only the directories in currenct directory 
 """
 
-from l import getDirectoryInfo, printDirectoryInfo
+from l import getDirectoryInfo, printDirs
 
-printDirectoryInfo(getDirectoryInfo('.',0), dirsOnly=True)
+printDirs(getDirectoryInfo('.',0))
 
 
 # end of file 
