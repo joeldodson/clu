@@ -118,9 +118,11 @@ if __name__ == "__main__":
 
 
 """ 
+# played with this in repl
 print('Walk This Way ...') 
-for/ (dirpath, dirnames, filenames) in os.walk('.'):
+for (dirpath, dirnames, filenames) in os.walk('.'):
     print(f'Directory: {dirpath}')
-
-
 """
+
+
+## end of file 
