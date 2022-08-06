@@ -28,20 +28,22 @@ def indent(level: int) -> str:
 
 
 #######
-def printDirectoryInfo(dir: Dict, level: int = 0):
+def printDirectoryInfo(dir: Dict, level: int = 0, dirsOnly = False):
     if level > 0: # tired of hearing the directory I'm currently in 
         typer.echo(f'{indent(level)}DIRECTORY: {dir["name"]}') 
+
+    # print directories first 
+    typer.echo(f'{indent(level)}DIRECTORIES - {len(dir["dirs"].keys())}:')
+    for d in dir["dirs"].keys():
+        dirpath, dirname = os.path.split(d)
+        typer.echo(f'{indent(level)}{dirname}') 
+    if dirsOnly: return 
+
     typer.echo(f'{indent(level)}FILES - {len(dir["files"])}:') 
     for f in dir["files"]:
         typer.echo(f'{indent(level)}{f}') 
 
-    typer.echo(f'{indent(level)}SUB DIRECTORIES - {len(dir["dirs"].keys())}:')
-    for d in dir["dirs"].keys():
-        dirpath, dirname = os.path.split(d)
-        typer.echo(f'{indent(level)}{dirname}') 
-    ## iterate through sub dirs twice.
-    ## I prefer to hear the names of all the subdirs 
-    ## then hear the contents of each subdir
+    ## go through dirs again to print the contents of each, if any exists 
     for d in dir["dirs"].keys():
         if dir["dirs"][d]:
             printDirectoryInfo(dir["dirs"][d], level + 1)
