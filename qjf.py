@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 
 """ 
@@ -44,6 +44,7 @@ def isJson(tstr: str) -> object:
     try:
         ret = json.loads(tstr)
     except ValueError:
+        ## typer.echo("not json")
         pass
     return ret
 
@@ -112,7 +113,7 @@ def printMatchObj(obj: object, matchObj: object) -> None:
     """
     printstring = "" 
     for k,v in obj.items():
-        if matchObj.get(k, None) != None:
+        if k in matchObj.keys(): 
             printstring += f'{k} : {v}, '
     typer.echo(printstring)
 
@@ -123,7 +124,7 @@ def printSpecifiedProperties(obj: object, properties: List[str], submatch: bool,
     if no properties in obj are matched by any string in properties list, 
     don't print anything 
     NOTE: with submatch, it's possible for a string in properties to match multiple properties in obj
-    or multiple strings in properties could match multiple properties in job.
+    or multiple strings in properties could match multiple properties in obj.
     keeping track of the matches in a dict addresses this multiple match problem.
     Once all the strings in properties list have been checked, the match dict can be printed as a single line 
     """

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 """
 a tool to investigate the directory structure, 
 including understanding the variety of its contents.
@@ -52,8 +53,6 @@ def printDirectoryInfo(dir: Dict, level: int = 0, dirsOnly = False):
     for d in dir["dirs"].keys():
         if dir["dirs"][d]:
             printDirectoryInfo(dir["dirs"][d], level + 1)
-
-
     if len(dir["symlinks"]) > 0:
         typer.echo(f'{indent(level)}SYMBOLIC LINKS -- {len(dir["symlinks"])}:') 
         for s in dir["symlinks"]:
