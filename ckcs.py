@@ -33,13 +33,13 @@ def findUniqueWhens() -> List:
         when = sc.get("when", None)
         if not when:
             uniqueWhens["global"] += 1
-            ## typer.echo(f'nowhen == {uniqueWhens["nowhen"]}')
+            ## print(f'nowhen == {uniqueWhens["nowhen"]}')
         elif uniqueWhens.get(when, None) != None:
             uniqueWhens[when] += 1             
-            ## typer.echo(f'{when} == {uniqueWhens[when]}')
+            ## print(f'{when} == {uniqueWhens[when]}')
         else: 
             uniqueWhens[when] = 1
-            ## typer.echo(f'new string: {when} == {uniqueWhens[when]}')
+            ## print(f'new string: {when} == {uniqueWhens[when]}')
     return uniqueWhens  
 
 
@@ -51,11 +51,11 @@ def findUniqueWhens() -> List:
 # So, so, as we're printing the items in the dict, we have to account for all items in the list of the value, thus all the nesting. 
 ##
 def printWhensPerAppearance(whensPerAppearance: Dict, topN: int = 7) -> None: 
-    typer.echo(f'The top {topN} whens based on how often each occurs in a shortcut')
+    print(f'The top {topN} whens based on how often each occurs in a shortcut')
     for appearances, whenList in whensPerAppearance.items():
         if (topN := topN - 1) >= 0:
             for when in whenList:
-                typer.echo(f'When <{when}> appears in {appearances} shortcuts') 
+                print(f'When <{when}> appears in {appearances} shortcuts') 
         else: break
 
 
@@ -76,7 +76,7 @@ def whens(
     I was curious how many different states there could be 
     and maybe printing the shortcuts based on groupings of states would be useful.
     """
-    typer.echo('If not now, WHEN!!??') 
+    print('If not now, WHEN!!??') 
     if unique:
         uniqueWhens = findUniqueWhens()
         whensPerAppearance = cluUtils.orderDictByIntValues(uniqueWhens) 
@@ -86,12 +86,12 @@ def whens(
 #######
 def filterShortcuts(searchStr: str) -> List: 
     searchStr = searchStr.lower()
-    typer.echo(f'searching commands for the string <{searchStr}>')
+    print(f'searching commands for the string <{searchStr}>')
     kbsFound = []
     for sc in shortcuts:
         if sc["command"].lower().find(searchStr) >= 0:
             kbsFound.append(sc) 
-    typer.echo(f'Found {len(kbsFound)} shortcuts')
+    print(f'Found {len(kbsFound)} shortcuts')
     return kbsFound 
 
 
@@ -102,7 +102,7 @@ def printShortcuts(pageSize: int, when: bool = False):
         sout = f'{sc["command"]} : {sc["key"]}'
         if when and sc.get("when"): 
             sout += f' : when? {sc["when"]}'
-        typer.echo(sout)
+        print(sout)
         if (count := count + 1) == pageSize:
             if typer.confirm("Exit?"): raise typer.Exit()
             else: count =0 
@@ -137,7 +137,7 @@ def main(ctx: typer.Context,
     shortcuts = getShortcutsFromFile(kbsFile)
     if not ctx.invoked_subcommand:
         if countOnly: 
-            typer.echo(f'File {kbsFile} contains {len(shortcuts)} shortcuts')
+            print(f'File {kbsFile} contains {len(shortcuts)} shortcuts')
             raise typer.Exit()
         elif searchStr: 
             shortcuts = filterShortcuts(searchStr)

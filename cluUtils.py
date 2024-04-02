@@ -12,7 +12,7 @@ def orderDictByIntValues(original: Dict) -> Dict:
     is the most frequent string and so on. 
     The ordering of strings that appear in the other structure the same number of times doesn't matter.
     """
-    typer.echo(f'original dict has {len(original.keys())} items')
+    print(f'original dict has {len(original.keys())} items')
     resultDict = {}
     ##
     # first find all the unique values 
@@ -20,16 +20,16 @@ def orderDictByIntValues(original: Dict) -> Dict:
     for v in original.values(): vals.add(int(v))
     vals = list(vals)
     vals.sort(reverse=True)
-    ## typer.echo(f'there are {len(vals)} : {vals}') 
+    ## print(f'there are {len(vals)} : {vals}') 
     ##
     # we have a list of the unique values in descending order.
     # now find the keys in original with values matching entries in the list 
     # and add them to the list in resultDict matching the value in as key 
     for uv in vals:
-        ## typer.echo(f'looking for strings that appeared {uv} times')
+        ## print(f'looking for strings that appeared {uv} times')
         listOfStringsPerValue = [s for s in original.keys() if original[s] == uv] 
         resultDict[uv] = listOfStringsPerValue 
-        typer.echo(f'value {uv} has {len(listOfStringsPerValue)} strings')
+        print(f'value {uv} has {len(listOfStringsPerValue)} strings')
     return resultDict 
 
 

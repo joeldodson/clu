@@ -44,7 +44,7 @@ def isJson(tstr: str) -> object:
     try:
         ret = json.loads(tstr)
     except ValueError:
-        ## typer.echo("not json")
+        ## print("not json")
         pass
     return ret
 
@@ -74,11 +74,11 @@ def countJsonProperties(filename: str):
                 properties_count[key] += 1
             else:
                 properties_count[key] = 1 
-    typer.echo(json.dumps(properties_count, indent=4))
+    print(json.dumps(properties_count, indent=4))
 
 #######
 def printAllProperties(obj: object) -> None:
-    typer.echo(obj)
+    print(obj)
 
 #######
 def getPropertyFromObject(obj: object, prop: str, submatch: bool, insensitive: bool) -> object:
@@ -115,7 +115,7 @@ def printMatchObj(obj: object, matchObj: object) -> None:
     for k,v in obj.items():
         if k in matchObj.keys(): 
             printstring += f'{k} : {v}, '
-    typer.echo(printstring)
+    print(printstring)
 
 #######
 def printSpecifiedProperties(obj: object, properties: List[str], submatch: bool, insensitive: bool) -> None:
@@ -135,13 +135,13 @@ def printSpecifiedProperties(obj: object, properties: List[str], submatch: bool,
             # check if prop is a substring of a property in the object,
             # or to do a case insensitive get() 
             matchObj.update(getPropertyFromObject(obj, prop, submatch, insensitive))
-            ## typer.echo(f'current matchObj is {matchObj}')
+            ## print(f'current matchObj is {matchObj}')
         else: 
             # if submatch and insensitive are both False, check if the property is in the object
             # if it is, add the property and its value to the match object .
             if obj.get(prop, None) != None:
                 matchObj[prop] = obj[prop]
-                ## typer.echo(f'current matchObj is {matchObj}')
+                ## print(f'current matchObj is {matchObj}')
     if len(matchObj.keys()) > 0:
         printMatchObj(obj, matchObj)
 
@@ -175,7 +175,7 @@ def main(jsonfile: str = typer.Argument(...),
     if -a (--all) is present, all -p options are ignored.
     If no -p or -a option is used, -i and -s are ignored.
     """
-    typer.echo(f'Querying {jsonfile}')
+    print(f'Querying {jsonfile}')
     if properties or all: 
         printJsonProperties(jsonfile, properties, all, submatch, insensitive)
     else:

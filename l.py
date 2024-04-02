@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 """
 a tool to investigate the directory structure, 
 including understanding the variety of its contents.
@@ -23,6 +22,12 @@ import json
 import typer
 from typing import Dict
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("path", nargs="?", default=".")
+parser.add_argument("-d", "--depth", type=int, action="store", default=0)
+args = parser.parse_args()
+
 #######
 def indent(level: int) -> str:
     return '   ' * level 
@@ -30,21 +35,21 @@ def indent(level: int) -> str:
 
 #######
 def printDirs(dir: Dict, level: int = 0):
-    typer.echo(f'{indent(level)}DIRECTORIES - {len(dir["dirs"].keys())}:')
+    print(f'{indent(level)}DIRECTORIES - {len(dir["dirs"].keys())}:')
     for d in dir["dirs"].keys():
         dirpath, dirname = os.path.split(d)
-        typer.echo(f'{indent(level)}{dirname}') 
+        print(f'{indent(level)}{dirname}') 
 
 #######
 def printFiles(dir: Dict, level: int = 0):
-    typer.echo(f'{indent(level)}FILES - {len(dir["files"])}:') 
+    print(f'{indent(level)}FILES - {len(dir["files"])}:') 
     for f in dir["files"]:
-        typer.echo(f'{indent(level)}{f}') 
+        print(f'{indent(level)}{f}') 
 
 #######
 def printDirectoryInfo(dir: Dict, level: int = 0, dirsOnly = False):
     if level > 0: # tired of hearing the directory I'm currently in, only print it if into sup dirs  
-        typer.echo(f'{indent(level)}DIRECTORY: {dir["name"]}') 
+        print(f'{indent(level)}DIRECTORY: {dir["name"]}') 
 
     printDirs(dir, level)
     printFiles(dir, level)
@@ -54,9 +59,9 @@ def printDirectoryInfo(dir: Dict, level: int = 0, dirsOnly = False):
         if dir["dirs"][d]:
             printDirectoryInfo(dir["dirs"][d], level + 1)
     if len(dir["symlinks"]) > 0:
-        typer.echo(f'{indent(level)}SYMBOLIC LINKS -- {len(dir["symlinks"])}:') 
+        print(f'{indent(level)}SYMBOLIC LINKS -- {len(dir["symlinks"])}:') 
         for s in dir["symlinks"]:
-            typer.echo(f'{indent(level)}{s}') 
+            print(f'{indent(level)}{s}') 
 
 
 #######
@@ -99,28 +104,20 @@ def getDirectoryInfo(dirname: str, depth: int) -> Dict:
 
 
 #######
-def main(
-        path: str = typer.Argument('.'), 
-        depth: int = typer.Option(0,"-d", "--depth"), 
-        interactive: bool = typer.Option(False, "--interactive", "-i")):
+def main():
     """
     inspect the file system 
     """
     dirinfo = None 
-    if os.path.isdir(path):
-        dirinfo = getDirectoryInfo(path, depth)
-    else:
-        typer.echo(f'oh no, you buggered that one. {path} is not a directory.')
-        return 
-
-    if interactive:
-        typer.echo("maybe, someday...")
-    else:
+    if os.path.isdir(args.path):
+        dirinfo = getDirectoryInfo(args.path, args.depth)
         printDirectoryInfo(dirinfo)
+    else:
+        print(f'oh no, you buggered that one. {args.path} is not a directory.')
 
 
 if __name__ == "__main__":
-    typer.run(main)
+    main()
 
 
 """ 
