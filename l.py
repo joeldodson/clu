@@ -19,8 +19,6 @@ The dict has the form:
 """
 import os 
 import json 
-import typer
-from typing import Dict
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -34,20 +32,20 @@ def indent(level: int) -> str:
 
 
 #######
-def printDirs(dir: Dict, level: int = 0):
+def printDirs(dir: dict, level: int = 0):
     print(f'{indent(level)}DIRECTORIES - {len(dir["dirs"].keys())}:')
     for d in dir["dirs"].keys():
         dirpath, dirname = os.path.split(d)
         print(f'{indent(level)}{dirname}') 
 
 #######
-def printFiles(dir: Dict, level: int = 0):
+def printFiles(dir: dict, level: int = 0):
     print(f'{indent(level)}FILES - {len(dir["files"])}:') 
     for f in dir["files"]:
         print(f'{indent(level)}{f}') 
 
 #######
-def printDirectoryInfo(dir: Dict, level: int = 0, dirsOnly = False):
+def printDirectoryInfo(dir: dict, level: int = 0, dirsOnly = False):
     if level > 0: # tired of hearing the directory I'm currently in, only print it if into sup dirs  
         print(f'{indent(level)}DIRECTORY: {dir["name"]}') 
 
@@ -65,7 +63,7 @@ def printDirectoryInfo(dir: Dict, level: int = 0, dirsOnly = False):
 
 
 #######
-def getDirectoryInfo(dirname: str, depth: int) -> Dict:
+def getDirectoryInfo(dirname: str, depth: int) -> dict:
     """
     start with an empty dict and fill it with information describing 
     the contents of the current directory as defined at the top of this file.
