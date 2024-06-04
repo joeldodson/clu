@@ -8,8 +8,8 @@ from openai import OpenAI
 chat_models = {
     "default": "gpt-3.5-turbo",
     "35t": "gpt-3.5-turbo",
-    "40": "gpt-4.0",
-    "40t": "gpt-4.0-turbo"
+    "4o": "gpt-4o",
+    "4t": "gpt-4-turbo"
 }
 
 ## Define the command line interface 
@@ -27,8 +27,8 @@ be sure to surround command line string arguments with double quotes.
 
 model_help = """which Chat GPT model to use for this session.  Options are:
 35t (default): the gpt-3.5-turbo,
-40: gtp-4.0,
-40t: gpt-4.0-turbo,
+4o: gpt-4o,
+4t: gpt-4-turbo,
 your own string: This is so you can try any valid string you find on the OpenAI website.  
 """
 
