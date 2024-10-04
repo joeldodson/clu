@@ -9,19 +9,34 @@ So, I could learn to use PowerShell, use git-bash (which I find a bit awkward on
 Writing Python tools sounded a lot more fun and applicable to other areas of development.
 So here we are.
 
-this also gives me a chance to play with 
-[typer](https://typer.tiangolo.com), a nice Python package to create command line tools.
+## Update 2024-10-04
 
-I'm not going into much depth on this readme regarding each tool and how to use it.  Try the '--help' option for each tool and you should at least get the command line options.
-I haven't added much help using typer either though, hopefully the nameing convention is sufficient ;)
+Quite a long time has passed since starting this clu repo.
+And, surprise, I've changed my mind in a few areas.
 
+First, typer.
+Sure, it's a cool utility, but it's slower than argparse, and has to be pip installed.
+I've removed it from the utils I use most (e.g.,'l', the 'ls' alternative).
+And I'm not using it in any new utils (e.g., dodona).
+Its still in ckcs mainly because I've mostly abandon ckcs.
 
-## ifs (Investigate File System)
+## l (with ld and lf being shortcuts) 
 This is my answer to 'ls -1'.
 I thought it would not only replace 'ls' but also be kind of a 'tree' utility.
 I'm not sure I like the 'tree' utility part of it yet, but with the default being to look only in the current (or specified) directory, I think ifs is a decent version of 'ls -1' 
 
-## ckcs (Ctrl-k Ctrl-s)
+Now l has some command line options to show file sizes and dates.
+run: "l --help" for details.
+
+## dodona
+
+aThis is a utility to chat with ChatGPT.
+You need your own OpenAI account and API access token.
+the help shows the URL with directions to get an API token.
+Run: "dodona --help" for details.
+
+## ckcs (Ctrl-k Ctrl-s) - abandon, or at least on the backburner
+
 the name comes from how to view the shortcut keys in Visual Studio Code.
 the json file in the data directory comes from looking at the default keyboard shortcuts json file in VS Code.
 In that file, I ctrl-a, ctrl-c then ctrl-v it into the data file.

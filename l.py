@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """
 a tool to investigate the directory structure, 
 including understanding the variety of its contents.
@@ -16,38 +15,82 @@ The dict has the form:
     subdirs: Dict[str: {}]  ## directories within current directory represented by dict of the same form 
     symlinks: List[str]  ## symbolic links, don't follow, just track that they exist 
 }
+
+2024-10-03: thought of rewriting this using pathlib.Path when adding arguments to include size, created time and modified time.
+Decided os.path was working just fin and can use Path to get extra info.
+Pretty inefficient I guess,
+but faster time for development changes 
 """
 import os 
 import json 
+from pathlib import Path
+from datetime import datetime as dt 
 
 import argparse
 parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(
+    prog="l",
+    description="my optimized directory listing",
+    formatter_class=argparse.RawTextHelpFormatter,
+    epilog="Cheers!",
+)
+
 parser.add_argument("path", nargs="?", default=".")
-parser.add_argument("-d", "--depth", type=int, action="store", default=0)
+parser.add_argument("-d", "--depth", type=int, action="store", default=0, help = "how deep to go down the filesystem")
+parser.add_argument("-s", "--size", action="store_true", help="include size of file")
+parser.add_argument("-c", "--created", action="store_true", help="include date file was created")
+parser.add_argument("-m", "--modified", action="store_true", help="include date file was last modified")
+parser.add_argument("-t", "--time", action="store_true", help="include time along with dates")
+
 args = parser.parse_args()
 
-#######
 def indent(level: int) -> str:
     return '   ' * level 
 
 
-#######
+def get_header_string() -> str:
+    hdr = "Name"
+    if args.size: hdr += " -- SIZE"
+    if args.created: hdr += " -- CREATED" 
+    if args.modified: hdr += " -- MODIFIED"
+    return hdr 
+
+
+def get_fileinfo_string(file: str) -> str:
+    finfo = file
+    stat = Path(file).stat()
+    if args.size: finfo += f" -- {stat.st_size}"
+
+    cr = dt.fromtimestamp(stat.st_birthtime)
+    mo = dt.fromtimestamp(stat.st_mtime)
+    if args.time:
+        if args.created: finfo += f" -- {cr.isoformat(timespec='seconds')}" 
+        if args.modified: finfo += f" -- {mo.isoformat(timespec='seconds')}" 
+    else:
+        if args.created: finfo += f" -- {cr.year}-{cr.month:02}-{cr.day:02}" 
+        if args.modified: finfo += f" -- {mo.year}-{mo.month:02}-{mo.day:02}"
+    return finfo
+
+
 def printDirs(dir: dict, level: int = 0):
     print(f'{indent(level)}DIRECTORIES - {len(dir["dirs"].keys())}:')
     for d in dir["dirs"].keys():
         dirpath, dirname = os.path.split(d)
-        print(f'{indent(level)}{dirname}') 
+        print(f'{indent(level)}{get_fileinfo_string(dirname)}') 
 
 #######
 def printFiles(dir: dict, level: int = 0):
     print(f'{indent(level)}FILES - {len(dir["files"])}:') 
     for f in dir["files"]:
-        print(f'{indent(level)}{f}') 
+        print(f'{indent(level)}{get_fileinfo_string(f)}') 
 
-#######
+
 def printDirectoryInfo(dir: dict, level: int = 0, dirsOnly = False):
     if level > 0: # tired of hearing the directory I'm currently in, only print it if into sup dirs  
         print(f'{indent(level)}DIRECTORY: {dir["name"]}') 
+    else:
+        # on the other hand, only print the header once 
+        print(get_header_string())
 
     printDirs(dir, level)
     printFiles(dir, level)
@@ -62,7 +105,6 @@ def printDirectoryInfo(dir: dict, level: int = 0, dirsOnly = False):
             print(f'{indent(level)}{s}') 
 
 
-#######
 def getDirectoryInfo(dirname: str, depth: int) -> dict:
     """
     start with an empty dict and fill it with information describing 
@@ -101,7 +143,6 @@ def getDirectoryInfo(dirname: str, depth: int) -> dict:
     return curdir 
 
 
-#######
 def main():
     """
     inspect the file system 
@@ -126,4 +167,4 @@ for (dirpath, dirnames, filenames) in os.walk('.'):
 """
 
 
-## end of file 
+## end of file

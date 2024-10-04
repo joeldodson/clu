@@ -79,7 +79,8 @@ def whens(
     print('If not now, WHEN!!??') 
     if unique:
         uniqueWhens = findUniqueWhens()
-        whensPerAppearance = cluUtils.orderDictByIntValues(uniqueWhens) 
+        whensPerAppearance = cluUtils.
+        orderDictByIntValues(uniqueWhens) 
         printWhensPerAppearance(whensPerAppearance)
 
 
