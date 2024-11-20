@@ -55,8 +55,13 @@ system_help = """describe the type of system you want answering your question.  
 
 question_help = """your curiosity is the limit.
 """
-file_help = """ use instead of a question to support  larger inputs.
+infile_help = """ use instead of a question to support  larger inputs.
 The file will be opened and used as the "content" for the initial question 
+"""
+outfile_help = """ write response to output file.
+The specified file will be truncated if it exists. """
+appendfile_help = """ append response to specified file.
+File will be created if it does not already exit.
 """
 
 parser = argparse.ArgumentParser(prog="dodona",
@@ -66,7 +71,9 @@ parser = argparse.ArgumentParser(prog="dodona",
 parser.add_argument("-m", "--model", default="default", help=model_help)
 parser.add_argument("-q", "--question", help=question_help)
 parser.add_argument("-s", "--system", help=system_help)
-parser.add_argument("-f", "--file", help=file_help)
+parser.add_argument("-i", "--infile", help=infile_help)
+parser.add_argument("-o", "--outfile", help=outfile_help)
+parser.add_argument("-a", "--appendfile", help=appendfile_help)
 args = parser.parse_args()
 
 
@@ -121,14 +128,24 @@ def ask_question(sess: DodonaSession):
     return completion
 
 
+def write_output(output: str, outfile: str, append: bool):
+    if not append:
+        Path(outfile).write_text(output, encoding='utf-8')
+    else:
+        with Path(outfile).open('a', encoding='utf-8') as f:
+            f.write(output)
+
+
 if __name__ == "__main__":
+    if args.outfile and args.appendfile:
+        raise ValueError("DO NOT specify both an output file and an append file")
     model = m if (m := chat_models.get(args.model)) else args.model
     system = args.system if args.system else get_system()
     print(f"questions will be answered useing model: \n {model} n with system background as: \n {system}")
     sess: DodonaSession = DodonaSession(model, system)
 
-    if args.file:
-        question = Path(args.file).read_text(encoding = 'utf-8')
+    if args.infile:
+        question = Path(args.infile).read_text(encoding = 'utf-8')
     else:
         question = args.question if args.question else get_question()
     while True:
@@ -140,6 +157,10 @@ if __name__ == "__main__":
             if answer:
                 answer_md = answer.choices[0].message.content
                 print(answer_md)
+                if args.outfile or args.appendfile:         
+                    write_output(answer_md, 
+                                 args.outfile if args.outfile else args.appendfile, 
+                                 args.appendfile  != None)
                 sess.add_assistant_message(markdown.markdown(answer_md))
             else:
                 print("could not get an answer for you")
