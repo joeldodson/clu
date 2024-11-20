@@ -27,7 +27,6 @@ from pathlib import Path
 from datetime import datetime as dt 
 
 import argparse
-parser = argparse.ArgumentParser()
 parser = argparse.ArgumentParser(
     prog="l",
     description="my optimized directory listing",
